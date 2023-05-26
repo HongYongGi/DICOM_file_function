@@ -58,6 +58,30 @@ def load_nii(path):
     nii = np.swapaxes(nii,0,1)
     return nii, affine, header
 
+def save_nii(array, save_path, header = None , affine = np.eye(4)):
+    
+    """
+    # Description
+        * Save NIFTI file, header, affine is original information of NIFTI file
+    
+    Args: 
+        array (numpy.ndarray): NIFTI array
+        save_path (str): save path
+        header (dict): header information
+        affine (numpy.ndarray): affine matrix
+        
+    Returns : 
+        save_path (str): save path
+                
+    """
+    if header is None:
+        nib.save(nib.Nifti1Image(array, affine), save_path)
+    else : 
+        nib.save(nib.Nifti1Image(array, affine, header), save_path)
+    
+    
+
+
 def load_dcm(dicom_dir, information_flag = False):
     """
     
