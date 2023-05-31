@@ -23,8 +23,6 @@ np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
 import dicom2nifti
 import dicom2nifti.settings as settings
 settings.disable_validate_slice_increment()
-settings.disable_validate_siemens_slice_increment()
-settings.disable_validate_siemens_slice_timing()
 import nibabel as nib
 import pydicom
 from pydicom import read_file
@@ -112,7 +110,7 @@ def load_dcm(dicom_dir, information_flag = False):
     
     dicom_files.sort()
     
-    dicoms = [read_file(dicom_file) for dicom_file in dicom_files]
+    dicoms = [read_file(dicom_file,force=True) for dicom_file in dicom_files]
     
     # 보통은 파일명으로 정렬되어 있지만, 그렇지 않은 경우가 있어서 정렬
     # sort dicoms by slices
@@ -153,8 +151,6 @@ def load_dcm(dicom_dir, information_flag = False):
         if (slope >= 0) and (orientation >= 0):
             flipflag = 3
 
-        
-        
         
         if information_flag==True : 
             return image, flipflag, Seriesdesc, thickness, spacing
@@ -210,7 +206,7 @@ def dcm2nii(ref_dicom_dir, save_nii_dir, file_name, volume, flip_flag = 1):
     elif flip_flag == 3:
         save_format = np.flip(np.transpose(volume, (1,0,2)), 2)
     else:
-        save_format =np.flip(np.transpose(volume, (1,0,2)), 0)
+        save_format =np.flip(np.flip(np.transpose(volume, (1,0,2)), 0),1)
         
     
     save_nii_image = nib.Nifti1Image(save_format, affine, header)

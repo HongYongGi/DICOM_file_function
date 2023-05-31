@@ -259,8 +259,3 @@ def rmse(label, predict):
     rmse = np.sqrt(np.mean((label - predict) ** 2))
     return rmse
 
-
-
-
-
-

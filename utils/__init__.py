@@ -2,7 +2,7 @@ __all__ = [
     "load_dcm", "load_nii", "save_nii", "dcm2nii", "nii2niigz", "niigz2nii",
     "confusion_matrix", "dice", "sensitivity", "precision", "recall", "f1_score", "fpr",
     "ssim", "psnr", "mae", "mse", "rmse",
-    "search_file", "search", "split_path",
+    "search_files", "search", "split_path",
     "forceAspect", "plot_3d", 
     
 ]
@@ -10,7 +10,7 @@ __all__ = [
 
 
 
-from .file import search_file, search, split_path
+from .file import search_files, search, split_path
 from .plot import forceAspect, plot_3d
 
 
