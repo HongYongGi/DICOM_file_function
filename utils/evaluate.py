@@ -25,7 +25,19 @@ import ipywidgets as widgets
 from datetime import date
 import skimage
 
-
+def norm(array ):
+    """
+    Normalize array function
+    
+    Args : 
+        array (array) : normalize target array
+    Return 
+        array (array) : normalized array
+    
+    """
+    
+    array = (array- array.min())/(array.max()- array.min())
+    return array
 
 def confusion_matrix(label, predict, cm_flag = False):
     """

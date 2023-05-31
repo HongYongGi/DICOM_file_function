@@ -53,3 +53,59 @@ def plot_3d(array, axis,title):
     forceAspect(ax2,1)
     forceAspect(ax3,1)    
     
+    
+    
+    
+    
+
+def meshgridnd_like(in_img, rng_func=range):
+    new_shape = list(in_img.shape)
+    all_range = [rng_func(i_len) for i_len in new_shape]
+    return tuple([x_arr.swapaxes(0, 1) for x_arr in np.meshgrid(*all_range)])
+
+
+def get_quiver_plot(flow_field, ds_factor = 18):
+    """
+    Params:
+    flow_field: deformation field in the form of np.array: e.g., (512,512,112,3)
+    ds_factor = an integer indicating the sparsity of the arrows in the quiver plot
+    """
+    DS_FACTOR = ds_factor
+    print(flow_field.shape)
+    # flow = np.moveaxis(flow_field, 0, -1)
+    flow = flow_field
+
+    c_xx, c_yy, c_zz = [x.flatten()
+                        for x in
+                        meshgridnd_like(flow[::DS_FACTOR, ::DS_FACTOR, ::DS_FACTOR, 0])]
+
+    get_flow = lambda i: flow[::DS_FACTOR, ::DS_FACTOR, ::DS_FACTOR, i].flatten()
+
+    fig = plt.figure(figsize=(10, 10))
+    ax = plt.axes(projection='3d')
+
+    ax.quiver(c_xx,
+              c_yy,
+              c_zz,
+              get_flow(0),
+              get_flow(1),
+              get_flow(2),
+              length=0.5,
+              normalize=True)
+
+
+
+def animate_3d(image, threshold=-300): 
+    p = image
+    verts, faces, normals, values = measure.marching_cubes(p, threshold)
+    fig = plt.figure(figsize=(10, 10))
+    ax = fig.add_subplot(111, projection='3d')
+    mesh = Poly3DCollection(verts[faces], alpha=0.1)
+    face_color = [0.5, 0.5, 1]
+    mesh.set_facecolor(face_color)
+    ax.add_collection3d(mesh)
+    ax.set_xlim(0, p.shape[0])
+    ax.set_ylim(0, p.shape[1])
+    ax.set_zlim(0, p.shape[2])
+
+    plt.show()
