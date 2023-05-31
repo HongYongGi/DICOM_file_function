@@ -14,7 +14,8 @@ import os, glob, shutil
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from skimage import measure
 
 
 def forceAspect(ax,aspect=1):
