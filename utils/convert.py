@@ -100,7 +100,7 @@ def load_dcm(dicom_dir, information_flag = False):
     """
     
     
-    dicom_files = glob.glob(dicom_dir + '/*.dcm')
+    dicom_files = glob.glob(dicom_dir + '/*')
     if len(dicom_files) == 0 : 
         dicom_files = glob.glob(dicom_dir + '/*.DCM')
     elif len(dicom_files) == 0 : 
@@ -114,13 +114,13 @@ def load_dcm(dicom_dir, information_flag = False):
     
     # 보통은 파일명으로 정렬되어 있지만, 그렇지 않은 경우가 있어서 정렬
     # sort dicoms by slices
-    # slice_sorts = np.argsort([dicom.SliceLocation for dicom in dicoms])
-    # dicoms = [dicoms[slice_sort] for slice_sort in slice_sorts]    
+    try: 
+        slice_sorts = np.argsort([dicom.SliceLocation for dicom in dicoms])
+        dicoms = [dicoms[slice_sort] for slice_sort in slice_sorts]    
+    except:
+        pass
     
-    
-    Seriesdesc   = dicoms[0].SeriesDescription
-    thickness    = dicoms[0].SliceThickness
-    spacing      = dicoms[0].PixelSpacing
+
     
     
     try :
@@ -153,6 +153,11 @@ def load_dcm(dicom_dir, information_flag = False):
 
         
         if information_flag==True : 
+            Seriesdesc   = dicoms[0].SeriesDescription
+            thickness    = dicoms[0].SliceThickness
+            spacing      = dicoms[0].PixelSpacing   
+                    
+            
             return image, flipflag, Seriesdesc, thickness, spacing
         else: 
             return image, flipflag
