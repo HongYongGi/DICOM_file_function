@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from skimage import measure
+from ipywidgets import interact
+from IPython.display import clear_output
 
 
 def forceAspect(ax,aspect=1):
@@ -53,8 +55,26 @@ def plot_3d(array, axis,title):
     forceAspect(ax1,1)
     forceAspect(ax2,1)
     forceAspect(ax3,1)    
+###########################################################################################
+def convert_window(array, window_center, window_width):
+    """
+    윈도우 레벨 조절 함수 
+
+    Args:
+        array (array): ct_data
+        window_center (int): window center number
+        window_width (int): window_width number
+    """
+    array = np.clip(array, window_center - window_width // 2, window_center + window_width // 2)
+    return array
     
-    
+
+
+# @interact(x_idx=(0, int(dicom_array.shape[0]-1)), y_idx=(0, int(dicom_array.shape[1]-1)), z_idx=(0, int(dicom_array.shape[2]-1)))
+# def view(x_idx, y_idx, z_idx):
+#     plot_3d(dicom_array, [x_idx, y_idx,  z_idx],'')
+
+
     
     
     
