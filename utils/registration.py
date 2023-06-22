@@ -31,13 +31,15 @@ def affine_registration(fixed, moving):     # fixed (insp) moving (exp) for lung
 
 
 
-def affine_transform(affine_reg, insp, exp):
+def affine_transform(affine_reg, insp, exp,defaultvalue_num= -1024):
     """ Affine registration of expiratory image and lung masks to
         inspiratory image
     """
     # affine register image
     exp_affine = apply_transforms(fixed=from_numpy(insp),
                                   moving=from_numpy(exp),
-                                  transformlist=affine_reg['fwdtransforms'])[:, :, :]
+                                  transformlist=affine_reg['fwdtransforms'],
+                                  defaultvalue = defaultvalue_num
+                                  )[:, :, :]
 
     return exp_affine
