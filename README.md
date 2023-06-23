@@ -96,3 +96,39 @@ nifti2raw(nifti_path, raw_path)
 ```
 raw2nifti(raw_path, nifti_path)
 ```
+
+---
+
+## 3. CT array plot function
+
+
+* 3D plot
+
+```
+plot_3d(array, axis,title = '',  projection_flag = False,sub1_title = '', sub2_title = '', sub3_title = '')
+ 
+* array : CT volume array
+* axis : plot axis
+* title : plot title
+* projection_flag : projection plot flag
+* sub1_title : subplot 1 title
+* sub2_title : subplot 2 title
+* sub3_title : subplot 3 title
+```
+if projection_flag is False, plot 3D plot
+![image](https://github.com/HongYongGi/DICOM_file_function/assets/39263586/676fcd38-cb54-4eb7-9df3-2efe2b3771d7)
+
+if projection_flag is True, plot 3D projection plot
+![image](https://github.com/HongYongGi/DICOM_file_function/assets/39263586/df2fb496-54a1-4a0f-8f0c-39e41b7c84f4)
+
+
+
+* 3D animate volume plot
+
+
+```
+animate_3d(image, threshold=-300)
+* image : CT volume array
+* threshold : threshold value
+```
+![image](https://github.com/HongYongGi/DICOM_file_function/assets/39263586/c3518615-5b0b-486f-bb2a-d06f1f841100)
