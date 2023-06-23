@@ -151,7 +151,7 @@ def get_quiver_plot(flow_field, ds_factor = 18):
 
 
 def animate_3d(image, threshold=-300): 
-    p = image
+    p = np.flip(image,0)
     verts, faces, normals, values = measure.marching_cubes(p, threshold)
     fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(111, projection='3d')
