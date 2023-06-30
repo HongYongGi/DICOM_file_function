@@ -26,7 +26,7 @@ def affine_registration(fixed, moving):     # fixed (insp) moving (exp) for lung
 
     affine_reg = registration(fixed=from_numpy(fixed),
                               moving=from_numpy(moving),
-                              type_of_transform='AffineFast')
+                              type_of_transform='Similarity')
     return affine_reg
 
 
