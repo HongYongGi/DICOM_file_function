@@ -136,7 +136,7 @@ def load_dcm(dicom_dir, information_flag = False):
         
         
         
-        slope = np.float32(dicoms[1].ImagePositionPatient[2]) - \
+        slope = np.float32(dicoms[15].ImagePositionPatient[2]) - \
                 np.float32(dicoms[0].ImagePositionPatient[2])
         orientation = np.float32(dicoms[0].ImageOrientationPatient[4])    
         
