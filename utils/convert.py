@@ -169,7 +169,7 @@ def load_dcm(dicom_dir, information_flag = False):
         return 0, flipflag
 
     
-def dcm2nii(ref_dicom_dir, save_nii_dir, file_name, volume, flip_flag = 1):
+def dcm2nii(ref_dicom_dir, save_nii_dir, file_name, volume):
     """
     
     # Description
@@ -205,13 +205,9 @@ def dcm2nii(ref_dicom_dir, save_nii_dir, file_name, volume, flip_flag = 1):
     header = temp.header
     affine = temp.affine
     
-    
-    if flip_flag == 1:
-        save_format = np.transpose(volume, (1,0,2))
-    elif flip_flag == 3:
-        save_format = np.flip(np.transpose(volume, (1,0,2)), 2)
-    else:
-        save_format =np.flip(np.flip(np.transpose(volume, (1,0,2)), 0),1)
+
+    save_format = np.flip(np.transpose(volume, (1,0,2)), 2)
+
         
     
     save_nii_image = nib.Nifti1Image(save_format, affine, header)
