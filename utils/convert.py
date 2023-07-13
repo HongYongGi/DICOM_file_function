@@ -101,6 +101,7 @@ def load_dcm(dicom_dir, information_flag = False):
     
     
     dicom_files = glob.glob(dicom_dir + '/*')
+    print(len(dicom_files))
     if len(dicom_files) == 0 : 
         dicom_files = glob.glob(dicom_dir + '/*.DCM')
     elif len(dicom_files) == 0 : 
