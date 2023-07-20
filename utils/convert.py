@@ -101,7 +101,6 @@ def load_dcm(dicom_dir, information_flag = False):
     
     
     dicom_files = glob.glob(dicom_dir + '/*')
-    print(len(dicom_files))
     if len(dicom_files) == 0 : 
         dicom_files = glob.glob(dicom_dir + '/*.DCM')
     elif len(dicom_files) == 0 : 
@@ -170,7 +169,7 @@ def load_dcm(dicom_dir, information_flag = False):
         return 0, flipflag
 
     
-def dcm2nii(ref_dicom_dir, save_nii_dir, file_name, volume):
+def dcm2nii(ref_dicom_dir, save_nii_dir, file_name, volume, flip_flag = 1):
     """
     
     # Description
@@ -206,9 +205,13 @@ def dcm2nii(ref_dicom_dir, save_nii_dir, file_name, volume):
     header = temp.header
     affine = temp.affine
     
-
-    save_format = np.flip(np.transpose(volume, (1,0,2)), 2)
-
+    
+    if flip_flag == 1:
+        save_format = np.transpose(volume, (1,0,2))
+    elif flip_flag == 3:
+        save_format = np.flip(np.transpose(volume, (1,0,2)), 2)
+    else:
+        save_format =np.flip(np.flip(np.transpose(volume, (1,0,2)), 0),1)
         
     
     save_nii_image = nib.Nifti1Image(save_format, affine, header)
