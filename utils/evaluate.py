@@ -25,7 +25,7 @@ import ipywidgets as widgets
 from datetime import date
 import skimage
 
-def norm(array ):
+def norm(array):
     """
     Normalize array function
     
@@ -39,16 +39,16 @@ def norm(array ):
     array = (array- array.min())/(array.max()- array.min())
     return array
 
-def confusion_matrix(label, predict, cm_flag = False):
+def _calculate_confusion_matrix(label, predict):
     """
-    Calculate confusion matrix
-
+    Calculate confusion matrix components
+    
     Args:
         label (ndarray): Label numpy array
         predict (ndarray): prediction numpy array
         
     Returns:
-        ndarray: Confusion matrix
+        tuple: (tp, fp, fn, tn)
     """
     predict_eq_0 = predict == 0
     predict_eq_1 = predict == 1
@@ -58,6 +58,23 @@ def confusion_matrix(label, predict, cm_flag = False):
     fp = np.sum(np.logical_and(predict_eq_1, target_eq_0))
     fn = np.sum(np.logical_and(predict_eq_0, target_eq_1))
     tn = np.sum(np.logical_and(predict_eq_0, target_eq_0))
+    return tp, fp, fn, tn
+
+def confusion_matrix(label, predict, cm_flag = False):
+    """
+    Calculate confusion matrix
+
+    Args:
+        label (ndarray): Label numpy array
+        predict (ndarray): prediction numpy array
+        cm_flag (bool): If True, return confusion matrix components
+        
+    Returns:
+        tuple: If cm_flag is True, returns (tp, fp, fn, tn)
+               Otherwise returns (dice, sensitivity, precision, recall, f1_score, fpr)
+    """
+    tp, fp, fn, tn = _calculate_confusion_matrix(label, predict)
+    
     if cm_flag:
         return tp, fp, fn, tn
     else:
@@ -68,7 +85,6 @@ def confusion_matrix(label, predict, cm_flag = False):
         f1_score = 2 * (precision * recall) / (precision + recall)
         fpr = fp / (fp + tn) # False Positive Rate
         return dice, sensitivity, precision, recall, f1_score, fpr
-    
 
 def dice(label, predict):
     """calculate dice
@@ -80,14 +96,7 @@ def dice(label, predict):
     Returns:
         dice: dice score
     """
-    predict_eq_0 = predict == 0
-    predict_eq_1 = predict == 1
-    target_eq_0 = label == 0
-    target_eq_1 = label == 1
-    tp = np.sum(np.logical_and(predict_eq_1, target_eq_1))
-    fp = np.sum(np.logical_and(predict_eq_1, target_eq_0))
-    fn = np.sum(np.logical_and(predict_eq_0, target_eq_1))
-    tn = np.sum(np.logical_and(predict_eq_0, target_eq_0))
+    tp, fp, fn, tn = _calculate_confusion_matrix(label, predict)
     dice = 2 * tp / (2 * tp + fp + fn)
     return dice
 
@@ -101,14 +110,7 @@ def sensitivity(label, predict):
     Returns:
         sensitivity: sensitivity score
     """
-    predict_eq_0 = predict == 0
-    predict_eq_1 = predict == 1
-    target_eq_0 = label == 0
-    target_eq_1 = label == 1
-    tp = np.sum(np.logical_and(predict_eq_1, target_eq_1))
-    fp = np.sum(np.logical_and(predict_eq_1, target_eq_0))
-    fn = np.sum(np.logical_and(predict_eq_0, target_eq_1))
-    tn = np.sum(np.logical_and(predict_eq_0, target_eq_0))
+    tp, fp, fn, tn = _calculate_confusion_matrix(label, predict)
     sensitivity = tp / (tp + fn)
     return sensitivity
 
@@ -122,17 +124,9 @@ def precision(label, predict):
     Returns:
         precision: precision score
     """
-    predict_eq_0 = predict == 0
-    predict_eq_1 = predict == 1
-    target_eq_0 = label == 0
-    target_eq_1 = label == 1
-    tp = np.sum(np.logical_and(predict_eq_1, target_eq_1))
-    fp = np.sum(np.logical_and(predict_eq_1, target_eq_0))
-    fn = np.sum(np.logical_and(predict_eq_0, target_eq_1))
-    tn = np.sum(np.logical_and(predict_eq_0, target_eq_0))
+    tp, fp, fn, tn = _calculate_confusion_matrix(label, predict)
     precision = tp / (tp + fp)
     return precision
-
 
 def recall(label, predict):
     """calculate recall
@@ -144,18 +138,9 @@ def recall(label, predict):
     Returns:
         recall: recall score
     """
-    predict_eq_0 = predict == 0
-    predict_eq_1 = predict == 1
-    target_eq_0 = label == 0
-    target_eq_1 = label == 1
-    tp = np.sum(np.logical_and(predict_eq_1, target_eq_1))
-    fp = np.sum(np.logical_and(predict_eq_1, target_eq_0))
-    fn = np.sum(np.logical_and(predict_eq_0, target_eq_1))
-    tn = np.sum(np.logical_and(predict_eq_0, target_eq_0))
+    tp, fp, fn, tn = _calculate_confusion_matrix(label, predict)
     recall = tp / (tp + fn)
     return recall
-
-
 
 def f1_score(label, predict):
     """calculate f1_score
@@ -167,19 +152,11 @@ def f1_score(label, predict):
     Returns:
         f1_score: f1_score score
     """
-    predict_eq_0 = predict == 0
-    predict_eq_1 = predict == 1
-    target_eq_0 = label == 0
-    target_eq_1 = label == 1
-    tp = np.sum(np.logical_and(predict_eq_1, target_eq_1))
-    fp = np.sum(np.logical_and(predict_eq_1, target_eq_0))
-    fn = np.sum(np.logical_and(predict_eq_0, target_eq_1))
-    tn = np.sum(np.logical_and(predict_eq_0, target_eq_0))
+    tp, fp, fn, tn = _calculate_confusion_matrix(label, predict)
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
     f1_score = 2 * (precision * recall) / (precision + recall)
     return f1_score
-
 
 def fpr(label, predict):
     """calculate fpr
@@ -191,20 +168,11 @@ def fpr(label, predict):
     Returns:
         fpr: fpr score
     """
-    predict_eq_0 = predict == 0
-    predict_eq_1 = predict == 1
-    target_eq_0 = label == 0
-    target_eq_1 = label == 1
-    tp = np.sum(np.logical_and(predict_eq_1, target_eq_1))
-    fp = np.sum(np.logical_and(predict_eq_1, target_eq_0))
-    fn = np.sum(np.logical_and(predict_eq_0, target_eq_1))
-    tn = np.sum(np.logical_and(predict_eq_0, target_eq_0))
+    tp, fp, fn, tn = _calculate_confusion_matrix(label, predict)
     fpr = fp / (fp + tn)
     return fpr
 
-
-
-def ssim (label, predict):
+def ssim(label, predict):
     """calculate ssim
 
     Args:
@@ -230,7 +198,6 @@ def psnr(label, predict):
     psnr = skimage.measure.compare_psnr(label, predict, data_range=1.0)
     return psnr
 
-
 def mae(label, predict):
     """calculate mae
 
@@ -243,7 +210,6 @@ def mae(label, predict):
     """
     mae = np.mean(np.abs(label - predict))
     return mae
-
 
 def mse(label, predict):
     """calculate mse
