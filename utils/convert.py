@@ -19,13 +19,14 @@
 # Package import
 import os, glob, shutil
 import numpy as np
-np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)  
+import warnings
+warnings.filterwarnings('ignore')  
 import dicom2nifti
 import dicom2nifti.settings as settings
 settings.disable_validate_slice_increment()
 import nibabel as nib
 import pydicom
-from pydicom import read_file
+from pydicom import dcmread
 
 from tqdm import tqdm
 import ipywidgets as widgets
@@ -110,7 +111,7 @@ def load_dcm(dicom_dir, information_flag = False):
     
     dicom_files.sort()
     
-    dicoms = [read_file(dicom_file,force=True) for dicom_file in dicom_files]
+    dicoms = [dcmread(dicom_file,force=True) for dicom_file in dicom_files]
     
     # 보통은 파일명으로 정렬되어 있지만, 그렇지 않은 경우가 있어서 정렬
     # sort dicoms by slices

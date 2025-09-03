@@ -2,7 +2,7 @@ import os, glob, shutil
 from tqdm import tqdm
 import pathlib
 import pydicom
-from pydicom import read_file
+from pydicom import dcmread
 
 
 
@@ -47,7 +47,7 @@ def split_path (path) :
 
 
 def Anonymized_header(dicom_path):
-    header_info = read_file(dicom_path)
+    header_info = dcmread(dicom_path)
     
     tags_to_remove = [
         0x00100020,  # Patient ID

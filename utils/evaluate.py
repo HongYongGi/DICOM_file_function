@@ -19,7 +19,7 @@ import seaborn as sns
 import pandas as pd
 import nibabel as nib
 import pydicom
-from pydicom import read_file
+from pydicom import dcmread
 from tqdm import tqdm
 import ipywidgets as widgets
 from datetime import date
